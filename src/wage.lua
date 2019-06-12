@@ -1,6 +1,8 @@
 
 local Common = require("common")
 
+local WageController = Observer:new()
+
 ---@type Unit
 local wage
 
@@ -35,7 +37,7 @@ local function refreshWage()
 end
 
 local function main()
-    wager = Unit:create(Player:get(0), FourCC("hgz1"), -768.0, 640.0, 270.000)
+    wager = Unit:create(Player:get(0), FourCC("hgz1"), -132.0, 158.0, 270.000)
 
     -- 领取工资
     local w = Trigger:create()
@@ -48,6 +50,8 @@ local function main()
     r:addAction(refreshWage)
 
     refreshGold()
+
+    WageController:registerEvent(Events.GOLD_UPDATE, refreshGold)
 end
 
 Timer:after(0.1, main)

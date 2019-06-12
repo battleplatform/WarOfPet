@@ -4,3 +4,4 @@ require('lib.oop')
 
 require("lib.console")
 require("lib.oop.enum")
+require('lib.observer')
