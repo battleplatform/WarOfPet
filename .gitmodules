@@ -1,0 +1,15 @@
+[submodule "src/lib/base"]
+	path = src/lib/base
+	url = https://github.com/warcraft-iii/lib-base.git
+[submodule "src/lib/oop"]
+	path = src/lib/oop
+	url = https://github.com/warcraft-iii/lib-oop.git
+[submodule "src/lib/observer"]
+	path = src/lib/observer
+	url = https://github.com/warcraft-iii/lib-observer.git
+[submodule "src/lib/iterates"]
+	path = src/lib/iterates
+	url = https://github.com/warcraft-iii/lib-iterates.git
+[submodule "src/lib/native"]
+	path = src/lib/native
+	url = https://github.com/warcraft-iii/lib-native.git
