@@ -14,7 +14,7 @@ local function main()
     require('seller')
 
     
-    Unit:create(Player:get(0), FourCC("Hpal"), -668.0, 150.0, 270.000)
+    Unit:create(Player:get(0), FourCC("Hpal"), -668.0, 150.0, 270.000):pause(true)
 
 end
 

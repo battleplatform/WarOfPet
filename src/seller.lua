@@ -1,51 +1,167 @@
 local Common = require("common")
 
 local data = {
-    {FourCC("hpea"), -1999.6, 1209.7, 43.848},
-    {FourCC("hfoo"), -1856.3, 1196.5, 89.629},
-    {FourCC("hkni"), -1694.1, 1176.7, 77.621},
-    {FourCC("hrif"), -1521.0, 1187.7, 66.810},
-    {FourCC("hmtm"), -1357.2, 1216.4, 71.227},
-    {FourCC("hmpr"), -2004.5, 967.4, 123.985},
-    {FourCC("hsor"), -1847.2, 945.4, 309.824},
-    {FourCC("hmtt"), -1656.7, 941.4, 354.342},
-    {FourCC("hspt"), -1395.6, 945.4, 235.279},
-    {FourCC("nbee"), -1206.0, 1211.9, 87.608},
-    {FourCC("nbel"), -1230.0, 953.4, 196.617},
-    {FourCC("nchp"), -1065.6, 1209.7, 255.396},
-    {FourCC("hhdl"), -1077.8, 975.4, 348.025},
-    {FourCC("njks"), -911.0, 1223.0, 207.923},
-    {FourCC("hrdh"), -904.0, 995.6, 272.348},
-    {FourCC("nhym"), -922.2, 786.0, 263.834},
-    {FourCC("nmed"), -1094.0, 758.4, 22.764},
-    {FourCC("nhea"), -1262.6, 754.7, 338.653},
-    {FourCC("nhem"), -1400.5, 734.7, 80.258},
-    {FourCC("nhef"), -1519.6, 720.2, 345.926},
-    {FourCC("nemi"), -1642.1, 736.5, 244.310},
-    {FourCC("hcth"), -1806.8, 718.4, 33.235},
-    {FourCC("hhes"), -1974.6, 711.2, 345.805}
+    "hpea",
+    "hfoo",
+    "hkni",
+    "hrif",
+    "hmtm",
+    "hmpr",
+    "hsor",
+    "hmtt",
+    "hspt",
+    "nbee",
+    "nbel",
+    "nchp",
+    "hhdl",
+    "njks",
+    "hrdh",
+    "nhym",
+    "nmed",
+    "nhea",
+    "nhem",
+    "nhef",
+    "nemi",
+    "hcth",
+    "hhes"
 }
 
-local npcs = {}
 local SellerController = Observer:new()
 
-local function buy()
+local npcs = {}
+local pets = {}
+local petsUnit = {}
+
+local sellArea = Rect:fromUd(gg_rct_sellarea)
+local petsArea = Rect:fromUd(gg_rct_petsarea)
+
+local selectedSellUnit
+local petTrigger
+
+---getPosition
+---@param rt Rect
+---@param col integer
+---@param count integer
+---@return float, float, float, float
+local function getPosition(rt, col, count)
+    local minX = rt:getMinX()
+    local minY = rt:getMinY()
+
+    local width = rt:getMaxX() - minX
+    local height = rt:getMaxY() - minY
+
+    local padX = math.floor(width / col)
+    local padY = math.floor(height / math.ceil(count * 1.0 / col))
+
+    return minX, minY, padX, padY
+end
+
+function SellerController.updatePet()
+    local ok, res = Common.Request("pets")
+    if ok then
+        for i, v in ipairs(res.pets) do
+            if npcs[v] then
+                local u = pets[v]
+                if not u then
+                    u = Unit:create(Player:get(0), v, 0, 0, 250)
+                    u:setUserData(v)
+                    pets[v] = u
+                    table.insert(petsUnit, u)
+                    petTrigger:registerUnitEvent(u, UnitEvent.Selected)
+                end
+            end
+        end
+
+        local col = 5
+        local minX, minY, padX, padY = getPosition(petsArea, col, #data)
+
+        minX = minX + 150
+        local x = minX
+        local y = minY + 150
+
+        local i = 1
+        ---@param u Unit
+        for i, u in ipairs(petsUnit) do
+            u:setPosition(x, y)
+            if i % col == 0 then
+                x = minX
+                y = y + padY
+            else
+                x = x + padX
+            end
+            i = i + 1
+        end
+    else
+        print(res)
+    end
+end
+
+function SellerController.updateSellArea()
+    local trig = Trigger:create()
+    trig:addAction(SellerController.buy)
+
+    local col = 5
+    local minX, minY, padX, padY = getPosition(sellArea, col, #data)
+
+    minX = minX + 150
+    local x = minX
+    local y = minY + 150
+
+    local i = 1
+    for i, v in ipairs(data) do
+        local uid = FourCC(v)
+        local u = Unit:create(Player:get(Native.GetBJPlayerNeutralVictim()), uid, x, y, 250)
+        u:setUserData(uid)
+        trig:registerUnitEvent(u, UnitEvent.Selected)
+        npcs[uid] = u
+
+        if i % col == 0 then
+            x = minX
+            y = y + padY
+        else
+            x = x + padX
+        end
+        i = i + 1
+    end
+end
+
+function SellerController.buy()
     ---@type Unit
-    local u =  Unit:fromUd(Native.GetTriggerUnit())
-    Common.Request('pet_buy', "id=" .. u:getUserData())
-    SellerController:fireEvent(Events.GOLD_UPDATE)
+    local u = Unit:fromUd(Native.GetTriggerUnit())
+    local pet = pets[u:getUserData()]
+
+    if not selectedSellUnit or selectedSellUnit ~= u then
+        selectedSellUnit = u
+        if pet then
+            print("已拥有该宠物")
+        else
+            print("双击购买宠物")
+        end
+        return
+    end
+    if pet then
+        print("已拥有该宠物，无法购买")
+        return
+    end
+    local ok, res = Common.Request("pet_buy", "id=" .. u:getUserData())
+    if ok then
+        SellerController.updatePet()
+        SellerController:fireEvent(Events.GOLD_UPDATE)
+    else
+        print(res)
+    end
+end
+
+function SellerController.petClick()
+    selectedSellUnit = nil
 end
 
 local function main()
-    local trig = Trigger:create()
-    trig:addAction(buy)
+    petTrigger = Trigger:create()
+    petTrigger:addAction(SellerController.petClick)
 
-    for i, v in ipairs(data) do
-        local u = Unit:create(Player:get(Native.GetBJPlayerNeutralVictim()), table.unpack(v))
-        u:setUserData(v[1])
-        table.insert(npcs, u)
-        trig:registerUnitEvent(u, UnitEvent.Selected)
-    end
+    SellerController.updateSellArea()
+    SellerController.updatePet()
 end
 
 Timer:after(0.1, main)

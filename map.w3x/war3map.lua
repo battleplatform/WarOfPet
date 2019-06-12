@@ -1,4 +1,12 @@
+gg_rct_sellarea = nil
+gg_rct_petsarea = nil
 function InitGlobals()
+end
+
+function CreateRegions()
+    local we
+    gg_rct_sellarea = Rect(-2144.0, 288.0, -672.0, 1376.0)
+    gg_rct_petsarea = Rect(-2144.0, -1248.0, -640.0, -160.0)
 end
 
 function InitCustomPlayerSlots()
@@ -30,6 +38,7 @@ function main()
     SetAmbientDaySound("LordaeronSummerDay")
     SetAmbientNightSound("LordaeronSummerNight")
     SetMapMusic("Music", true, 0)
+    CreateRegions()
     InitBlizzard()
     InitGlobals()
 end
