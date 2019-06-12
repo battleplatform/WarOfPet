@@ -1,4 +1,4 @@
-local Timer = require("lib.oop.timer")
+
 local json = require("json")
 
 local Common = {
@@ -12,18 +12,6 @@ function Common.Request(route, data)
     local ok, res = pcall(json.decode, res)
     ok = ok and not res.error
     return ok, ok and res.body or res.message or res
-end
-
-function Common.doAfter(sec, cb)
-    local t = Timer:create()
-    t:start(
-        sec,
-        false,
-        function()
-            cb()
-            t:destroy()
-        end
-    )
 end
 
 return Common

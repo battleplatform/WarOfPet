@@ -36,12 +36,6 @@ STRING 7
 3. 随机对战
 }
 
-STRING 8
-// 技能: Agz1 (领工资), Name (名字)
-{
-领工资
-}
-
 STRING 9
 // 单位: hgz1 (管理员), Name (名字)
 {
@@ -49,14 +43,26 @@ STRING 9
 }
 
 STRING 10
-// 技能: Agz1 (领工资), Tip (提示工具 - 普通)
+// 技能: Agz1 (老板), Tip (提示工具 - 普通)
 {
 领工资(|cffffcc00G|r)
 }
 
 STRING 11
-// 技能: Agz1 (领工资), Hotkey (热键 - 普通)
+// 技能: Agz1 (老板), Hotkey (热键 - 普通)
 {
 G
+}
+
+STRING 12
+// 技能: Agz1 (老板), Ubertip (提示工具 - 普通 - 扩展的)
+{
+每分钟增加|cffff00001|r金币（包含离线），上限|cffff0000500|r金币
+}
+
+STRING 13
+// 技能: Agz1 (老板), Name (名字)
+{
+老板
 }
 
