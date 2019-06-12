@@ -1,3 +1,3 @@
--- require('lib.native')
--- require('lib.base')
--- require('lib.oop')
+require('lib.native')
+require('lib.base')
+require('lib.oop')
