@@ -122,7 +122,6 @@ function SellerController.updatePet()
         local i = 1
         ---@param u Unit
         for _, u in ipairs(petsUnit) do
-
             u:setPosition(x, y)
 
             if teams[u:getUserData()] ~= nil then
@@ -206,9 +205,7 @@ function SellerController.buy()
     selectedPetUnit = nil
     if not selectedSellUnit or selectedSellUnit ~= u then
         selectedSellUnit = u
-        if pet then
-            print("已拥有该宠物")
-        else
+        if not pet then
             print("双击购买宠物")
         end
         return
