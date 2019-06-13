@@ -1,5 +1,12 @@
 gg_rct_sellarea = nil
 gg_rct_petsarea = nil
+gg_rct_bfFriend1 = nil
+gg_rct_bfFriend2 = nil
+gg_rct_bfFriend3 = nil
+gg_rct_bfEnemy1 = nil
+gg_rct_bfEnemy2 = nil
+gg_rct_bfEnemy3 = nil
+gg_rct_battlecenter = nil
 function InitGlobals()
 end
 
@@ -7,6 +14,13 @@ function CreateRegions()
     local we
     gg_rct_sellarea = Rect(-2144.0, 288.0, -672.0, 1376.0)
     gg_rct_petsarea = Rect(-2144.0, -1248.0, -640.0, -160.0)
+    gg_rct_bfFriend1 = Rect(512.0, -480.0, 736.0, -288.0)
+    gg_rct_bfFriend2 = Rect(896.0, -480.0, 1152.0, -288.0)
+    gg_rct_bfFriend3 = Rect(1280.0, -480.0, 1536.0, -288.0)
+    gg_rct_bfEnemy1 = Rect(1280.0, 544.0, 1536.0, 736.0)
+    gg_rct_bfEnemy2 = Rect(896.0, 544.0, 1152.0, 736.0)
+    gg_rct_bfEnemy3 = Rect(512.0, 544.0, 768.0, 736.0)
+    gg_rct_battlecenter = Rect(1024.0, 96.0, 1056.0, 128.0)
 end
 
 function InitCustomPlayerSlots()

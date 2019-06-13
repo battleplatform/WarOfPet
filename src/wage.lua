@@ -1,4 +1,3 @@
-
 local Common = require("common")
 
 local WageController = Observer:new()
@@ -16,7 +15,8 @@ local function refreshGold()
 end
 
 local function getWage()
-    if Native.GetSpellAbilityId() == FourCC("Agz1") then
+    local spell = Native.GetSpellAbilityId()
+    if spell == FourCC("Agz1") then
         local ok, res = Common.Request("wage")
         if ok then
             wager:setStringField(UnitStringField.Name, string.format("可领工资：%s", res.wage))
@@ -24,6 +24,8 @@ local function getWage()
         else
             print(res)
         end
+    elseif spell == FourCC("Amat") then
+        WageController:fireEvent(Events.START_MATCH)
     end
 end
 
