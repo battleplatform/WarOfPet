@@ -29,13 +29,6 @@ local stage = {
     Start = function(ev)
         -- 对战开始
         print(ev.type)
-        local countDown = 5
-        local function startCountDown(count)
-            if count >= 0 then
-                Timer:after(1, startCountDown)
-            else
-            end
-        end
     end,
     Unit = function(ev)
         -- 上场 team, petId, entityId

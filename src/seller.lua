@@ -121,7 +121,8 @@ function SellerController.updatePet()
 
         local i = 1
         ---@param u Unit
-        for i, u in ipairs(petsUnit) do
+        for _, u in ipairs(petsUnit) do
+
             u:setPosition(x, y)
 
             if teams[u:getUserData()] ~= nil then
@@ -171,7 +172,7 @@ function SellerController.updateSellArea()
     local y = minY + 150
 
     local i = 1
-    for i, v in ipairs(data) do
+    for _, v in ipairs(data) do
         local uid = FourCC(v.petId)
         local u = Unit:create(Player:get(Native.GetBJPlayerNeutralVictim()), uid, x, y, 250)
         u:setUserData(uid)

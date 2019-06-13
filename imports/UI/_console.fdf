@@ -1,0 +1,37 @@
+
+IncludeFile "UI\FrameDef\Glue\StandardTemplates.fdf",
+
+Frame "FRAME" "__console" {
+    Height 0.2,
+
+    // --- chat display
+    Frame "TEXTAREA" "__consoleTextArea" {
+        DecorateFileNames,
+        FrameFont "MasterFont", 0.011, "",
+        TextAreaLineHeight 0.01,
+        TextAreaLineGap 0.0015,
+        TextAreaInset 0.0,
+        TextAreaMaxLines 128,
+        
+
+        SetAllPoints,
+
+        TextAreaScrollBar "__consoleTextAreaScrollBar",
+        Frame "SCROLLBAR" "__consoleTextAreaScrollBar" INHERITS WITHCHILDREN "StandardScrollBarTemplate" {
+        }
+        
+        ControlBackdrop "__consoleTextAreaBackdrop",
+        Frame "BACKDROP" "__consoleTextAreaBackdrop" {
+            BackdropTileBackground,
+            BackdropBackground  "UI\Widgets\BattleNet\bnet-inputbox-back.blp",
+            BackdropBlendAll,
+        }
+    }
+    
+    Frame "SLASHCHATBOX" "__consoleEditBox" INHERITS WITHCHILDREN "StandardEditBoxTemplate" {
+        SetPoint TOPLEFT, "__consoleTextArea", BOTTOMLEFT, 0, 0,
+        SetPoint TOPRIGHT, "__consoleTextArea", BOTTOMRIGHT, 0, 0,
+    }
+    
+}
+

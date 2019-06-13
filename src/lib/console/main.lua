@@ -1,9 +1,20 @@
+require("lib.oop")
+require("lib.oop.enum")
+
 local Native = require("lib.native.native")
+
+---@type Frame
 local console
+---@type Frame
 local consoleEditBox
-local consoleShow = false
-local consoleTrig
+---@type Frame
 local consoleTextArea
+
+---@type boolean
+local consoleShow = false
+
+---@type Trigger
+local consoleTrig
 
 local function Toggle(forceHide)
     if forceHide then
@@ -14,8 +25,8 @@ local function Toggle(forceHide)
     end
     if console then
         consoleShow = not consoleShow
-        Native.BlzFrameSetVisible(console, consoleShow)
-        Native.BlzFrameSetFocus(consoleEditBox, consoleShow)
+        console:setVisible(consoleShow)
+        consoleEditBox:setFocus(consoleShow)
     end
 end
 
@@ -34,31 +45,37 @@ local function OnShortcutsHide()
 end
 
 local function InitShortcuts()
-    local showTrigger = Native.CreateTrigger()
-    Native.TriggerAddAction(showTrigger, OnShortcuts)
-    local hideTrigger = Native.CreateTrigger()
-    Native.TriggerAddAction(hideTrigger, OnShortcutsHide)
+    local trigShow = Trigger:create()
+    trigShow:addAction(OnShortcuts)
+
+    local trigHide = Trigger:create()
+    trigHide:addAction(OnShortcutsHide)
+
     for i = 0, 23 do
-        Native.BlzTriggerRegisterPlayerKeyEvent(showTrigger, Native.Player(i), Native.OSKEY_F1, 4, true)
-        Native.BlzTriggerRegisterPlayerKeyEvent(hideTrigger, Native.Player(i), Native.OSKEY_ESCAPE, 0, true)
+        trigShow:registerPlayerKeyEvent(Player:get(i), OsKeyType.F1, 4, true)
+        trigHide:registerPlayerKeyEvent(Player:get(i), OsKeyType.Escape, 0, true)
     end
 end
 
+local orgPring = print
 local function AddText(text)
     if consoleTextArea then
-        Native.BlzFrameSetText(consoleTextArea, text)
+        consoleTextArea:addText(text)
+    else
+        orgPring(text)
     end
+end
+
+_G.print = function(...)
+    AddText(table.concat({...}, " "))
 end
 
 local function OnEditBoxEnter()
-    local txt = Native.BlzFrameGetText(consoleEditBox)
-    if not txt or txt == "" then
+    local script = Native.BlzGetTriggerFrameText()
+    if not script or script == "" then
         return
     end
-    if not string.endswith(txt, ";", true) then
-        return
-    end
-    local script = string.sub(txt, 0, string.len(txt) - 1)
+
     local f, err = load(script)
     if not f then
         AddText(err)
@@ -69,38 +86,42 @@ local function OnEditBoxEnter()
         AddText(r)
         return
     end
-    Native.BlzFrameSetFocus(consoleEditBox, true)
-    Native.BlzFrameSetText(consoleEditBox, "")
+    consoleEditBox:setFocus(true)
+    consoleEditBox:setText("")
 end
 
 local function Init()
-    if not Native.BlzLoadTOCFile("UI\\DzConsole.toc") then
-        print("Load toc failed")
+    if not Native.BlzLoadTOCFile("UI\\_console.toc") then
+        print("|cffff0000Load console toc failed|r")
         return
     end
 
-    local gameui = Native.BlzGetOriginFrame(Native.ORIGIN_FRAME_GAME_UI, 0)
-    console = Native.BlzCreateFrame("DzConsole", gameui, 10, 0)
-    if console then
-        -- hide && position
-        Native.BlzFrameSetVisible(console, false)
-        Native.BlzFrameSetPoint(console, Native.FRAMEPOINT_TOPLEFT, gameui, Native.FRAMEPOINT_TOPLEFT, 0, 0)
-        Native.BlzFrameSetPoint(console, Native.FRAMEPOINT_TOPRIGHT, gameui, Native.FRAMEPOINT_TOPRIGHT, 0, 0)
+    local gameui = Frame:getOrigin(OriginFrameType.GameUi, 0)
 
-        -- events
-        consoleEditBox = Native.BlzGetFrameByName("DzConsoleEditBox", 0)
-        consoleTrig = Native.CreateTrigger()
-        Native.TriggerAddAction(consoleTrig, OnEditBoxEnter)
-        Native.BlzTriggerRegisterFrameEvent(consoleTrig, consoleEditBox, Native.FRAMEEVENT_EDITBOX_TEXT_CHANGED)
-
-        consoleTextArea = Native.BlzGetFrameByName('DzConsoleTextArea', 0)
-
-        InitShortcuts()
+    console = Frame:create("__console", gameui, 10, 0)
+    if not console then
+        print("|cffff0000Create console failed|r")
+        return
     end
+
+    console:setVisible(false)
+    console:setPoint(FramePointType.Topleft, gameui, FramePointType.Topleft, 0, 0)
+    console:setPoint(FramePointType.Topright, gameui, FramePointType.Topright, 0, 0)
+
+    -- events
+    consoleEditBox = Frame:getByName("__consoleEditBox", 0)
+
+    consoleTrig = Trigger:create()
+    consoleTrig:registerFrameEvent(consoleEditBox, FrameEventType.EditboxEnter)
+    consoleTrig:addAction(OnEditBoxEnter)
+
+    consoleTextArea = Frame:getByName("__consoleTextArea", 0)
+
+    InitShortcuts()
 end
 
 local function main()
-    print("console main")
+    print("|cff00ff00Console Loaded!!!|r press |cffff0000Alt+F12|r to toggle")
     Init()
 end
 
