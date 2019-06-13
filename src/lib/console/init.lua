@@ -1,2 +1,0 @@
-
-require('lib.console.main')
