@@ -13,3 +13,6 @@
 [submodule "src/lib/native"]
 	path = src/lib/native
 	url = https://github.com/warcraft-iii/lib-native.git
+[submodule "src/lib/console"]
+	path = src/lib/console
+	url = https://github.com/warcraft-iii/lib-console.git
