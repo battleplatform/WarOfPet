@@ -1,41 +1,5 @@
 local Common = require("common")
 
-local data = {
-    {petId = "hpea", price = 50, attack = 20, health = 100, speed = 5},
-    {petId = "hfoo", price = 50, attack = 20, health = 100, speed = 5},
-    {petId = "hkni", price = 50, attack = 20, health = 100, speed = 5},
-    {petId = "hrif", price = 50, attack = 20, health = 100, speed = 5},
-    {petId = "hmtm", price = 50, attack = 20, health = 100, speed = 5},
-    {petId = "hmpr", price = 100, attack = 40, health = 200, speed = 10},
-    {petId = "hsor", price = 100, attack = 40, health = 200, speed = 10},
-    {petId = "hmtt", price = 100, attack = 40, health = 200, speed = 10},
-    {petId = "hspt", price = 100, attack = 40, health = 200, speed = 10},
-    {petId = "nbee", price = 100, attack = 40, health = 200, speed = 10},
-    {petId = "nbel", price = 150, attack = 60, health = 300, speed = 15},
-    {petId = "nchp", price = 150, attack = 60, health = 300, speed = 15},
-    {petId = "hhdl", price = 150, attack = 60, health = 300, speed = 15},
-    {petId = "njks", price = 150, attack = 60, health = 300, speed = 15},
-    {petId = "hrdh", price = 150, attack = 60, health = 300, speed = 15},
-    {petId = "nhym", price = 200, attack = 80, health = 400, speed = 20},
-    {petId = "nmed", price = 200, attack = 80, health = 400, speed = 20},
-    {petId = "nhea", price = 200, attack = 80, health = 400, speed = 20},
-    {petId = "nhem", price = 200, attack = 80, health = 400, speed = 20},
-    {petId = "nhef", price = 200, attack = 80, health = 400, speed = 20},
-    {petId = "nemi", price = 250, attack = 100, health = 500, speed = 25},
-    {petId = "hcth", price = 250, attack = 100, health = 500, speed = 25},
-    {petId = "hhes", price = 250, attack = 100, health = 500, speed = 25},
-    {petId = "ogrk", price = 250, attack = 100, health = 500, speed = 25},
-    {petId = "nw2w", price = 250, attack = 100, health = 500, speed = 25}
-}
-
-local spell = {
-    [20] = "Agj1",
-    [40] = "Agj2",
-    [60] = "Agj3",
-    [80] = "Agj4",
-    [100] = "Agj5"
-}
-
 local SellerController = Observer:new()
 
 local npcs = {}
@@ -72,14 +36,6 @@ local function getPosition(rt, col, count)
     return minX, minY, padX, padY
 end
 
-local function getData(id)
-    for i, v in ipairs(data) do
-        if FourCC(v.petId) == id then
-            return v
-        end
-    end
-end
-
 function SellerController.updatePet()
     local ok, res = Common.Request("pets")
     if ok then
@@ -95,9 +51,11 @@ function SellerController.updatePet()
                     u = Unit:create(Player:get(0), v, 0, 0, 250)
                     u:setUserData(v)
                     u:pauseEx(true)
+                    local d = Common.getUnitData(v)
+                    u:setMaxHP(d.health)
+                    u:setState(UnitState.Life, d.health)
 
-                    local d = getData(v)
-                    u:addAbility(FourCC(spell[d.attack]))
+                    u:addAbility(FourCC(Common.UnitSpell[d.attack]))
 
                     pets[v] = u
                     table.insert(petsUnit, u)
@@ -164,14 +122,14 @@ function SellerController.updateSellArea()
     trig:addAction(SellerController.buy)
 
     local col = 5
-    local minX, minY, padX, padY = getPosition(sellArea, col, #data)
+    local minX, minY, padX, padY = getPosition(sellArea, col, #Common.UnitData)
 
     minX = minX + 150
     local x = minX
     local y = minY + 150
 
     local i = 1
-    for _, v in ipairs(data) do
+    for _, v in ipairs(Common.UnitData) do
         local uid = FourCC(v.petId)
         local u = Unit:create(Player:get(Native.GetBJPlayerNeutralVictim()), uid, x, y, 250)
         u:setUserData(uid)
