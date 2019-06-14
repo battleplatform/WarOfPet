@@ -12,9 +12,11 @@ local function main()
     require('seller')
     require('fight')    
 
+    Timer:create():start(0.01, true, function()
+        Native.SetCameraField(CameraField.TargetDistance, 2500.0, 0)
+        Native.SetCameraField(CameraField.AngleOfAttack, -50.0, 0)
+    end)
     
-    Unit:create(Player:get(0), FourCC("Hpal"), -668.0, 150.0, 270.000):pause(true)
-
 end
 
 Timer:after(2, main)
