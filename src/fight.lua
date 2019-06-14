@@ -27,6 +27,22 @@ local StartCountDown = TextTag:create()
 local worldUpdate
 local worldUpdateInterval = 0.03
 
+---@type TextTag
+local worldTextTag = TextTag:create()
+worldTextTag:setVisibility(false)
+worldTextTag:setPos(BattleCenter:getCenterX(), BattleCenter:getCenterY(), 0)
+
+local function showWorldText(rope, duration, text, r, g, b)
+    r = r or 0
+    g = g or 255
+    b = b or 0
+    worldTextTag:setColor(0, 255, 0, 1)
+    worldTextTag:setVisibility(true)
+    worldTextTag:setText(text, 15 * 0.0023)
+    rope:wait(duration)
+    worldTextTag:setVisibility(false)
+end
+
 ---@type Unit[]
 local units = {}
 
@@ -35,20 +51,13 @@ local stage = {
         -- 对战开始
         Native.PanCameraToTimed(BattleCenter:getCenterX(), BattleCenter:getCenterY(), 1.0)
         rope:wait(1)
-        local tag = TextTag:create()
-        tag:setColor(0, 255, 0, 1)
-        tag:setPos(BattleCenter:getCenterX(), BattleCenter:getCenterY(), 0)
-        tag:setVisibility(true)
-        tag:setText("准备战斗", 15 * 0.0023)
-        rope:wait(1)
+        showWorldText(rope, 1, "准备战斗")
         print(ev.type)
         for i = 5, 1, -1 do
-            tag:setText(i, 15 * 0.0023)
-            rope:wait(1)
+            showWorldText(rope, 1, i)
         end
-        tag:setText("开始战斗", 15 * 0.0023)
-        tag:setVisibility(false)
-        tag:destroy()
+        showWorldText(rope, 1, "开始战斗")
+        worldTextTag:setVisibility(false)
     end,
     Unit = function(rope, ev)
         -- 上场 team, petId, entityId
@@ -80,7 +89,16 @@ local stage = {
         -- 死亡 source
     end,
     End = function(rope, ev)
-        -- 胜利 winner
+        local isWin = ev.winner == 1
+        if isWin then
+            showWorldText(rope, 3, "YOU WIN!")
+        else
+            showWorldText(rope, 3, "YOU LOSE!", 255, 0, 0)
+        end
+        for k, v in pairs(units) do
+            v:remove()
+        end
+        units = {}
     end
 }
 
