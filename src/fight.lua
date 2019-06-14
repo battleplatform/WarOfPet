@@ -46,6 +46,14 @@ end
 ---@type Unit[]
 local units = {}
 
+---@class ReplyAttack
+---@field source integer
+---@field target integer
+
+---@class ReplyDamage
+---@field source integer
+---@field damage integer
+
 local stage = {
     Start = function(rope, ev)
         -- 对战开始
@@ -53,7 +61,7 @@ local stage = {
         rope:wait(1)
         showWorldText(rope, 1, "准备战斗")
         print(ev.type)
-        for i = 5, 1, -1 do
+        for i = 2, 1, -1 do
             showWorldText(rope, 1, i)
         end
         showWorldText(rope, 1, "开始战斗")
@@ -68,27 +76,50 @@ local stage = {
         end
         local isMy = ev.team == 1
         local u = Unit:create(Player:get(isMy and 0 or 1), ev.petId, pos:getCenterX(), pos:getCenterY(), isMy and 90 or 270)
-        u:pauseEx(true)
+        u:addAbility(FourCC('Aro1'))
+        u:addAbility(FourCC('Avul'))
         local data = Common.getUnitData(ev.petId)
         u:setMaxHP(data.health)
         u:setState(UnitState.Life, data.health)
         u:addAbility(FourCC(Common.UnitSpell[data.attack]))
+        u.hp = data.health
         units[ev.entityId] = u
-        rope:wait(2)
+        -- rope:wait(2)
     end,
     Round = function(rope, ev)
         -- 回合数 round
     end,
+    ---@param ev ReplyAttack
     Attack = function(rope, ev)
         -- 攻击事件 source target
+
+        print('Attack')
+
+        local source = units[ev.source]
+        local target = units[ev.target]
+
+        -- source:pauseEx(false)
+        source:issueTargetOrder('Impale', target)
+        -- source:pauseEx(true)
     end,
+    ---@param ev ReplyDamage
     Damage = function(rope, ev)
         -- 受到伤害 source damage
+
+        local u = units[ev.source]
+        local hp = u.hp - ev.damage
+        u.hp = hp
+        u:setState(UnitState.Life, hp)
+        rope:wait(1)
     end,
     Death = function(rope, ev)
-        -- 死亡 source
+        local u = units[ev.source]
+
+        u:kill()
     end,
     End = function(rope, ev)
+
+        print('End')
         local isWin = ev.winner == 1
         if isWin then
             showWorldText(rope, 3, "YOU WIN!")
