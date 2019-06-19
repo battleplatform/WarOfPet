@@ -77,7 +77,7 @@ local stage = {
         local isMy = ev.team == 1
         local u = Unit:create(Player:get(isMy and 0 or 1), ev.petId, pos:getCenterX(), pos:getCenterY(), isMy and 90 or 270)
         u:addAbility(FourCC('Aro1'))
-        u:addAbility(FourCC('Avul'))
+        -- u:addAbility(FourCC('Avul'))
         local data = Common.getUnitData(ev.petId)
         u:setMaxHP(data.health)
         u:setState(UnitState.Life, data.health)
@@ -99,7 +99,10 @@ local stage = {
         local target = units[ev.target]
 
         -- source:pauseEx(false)
-        source:issueTargetOrder('Impale', target)
+        print( source:issueTargetOrder('thunderbolt', target) )
+
+        rope:wait(1)
+
         -- source:pauseEx(true)
     end,
     ---@param ev ReplyDamage

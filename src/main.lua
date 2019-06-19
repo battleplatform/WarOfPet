@@ -1,4 +1,6 @@
 
+require('lib')
+
 local function main()
 
     print("Welcome to WarOfPet!!!")
@@ -8,11 +10,11 @@ local function main()
 
     require('eventids')
 
-    require('wage')
-    require('seller')
-    require('fight')    
+    dofile('wage.lua')
+    dofile('seller.lua')
+    dofile('fight.lua')
 
-    
+
     Unit:create(Player:get(0), FourCC("Hpal"), -668.0, 150.0, 270.000):pause(true)
 
 end

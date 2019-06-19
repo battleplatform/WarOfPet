@@ -7,6 +7,7 @@ gg_rct_bfEnemy1 = nil
 gg_rct_bfEnemy2 = nil
 gg_rct_bfEnemy3 = nil
 gg_rct_battlecenter = nil
+gg_trg____________________001 = nil
 function InitGlobals()
 end
 
@@ -21,6 +22,19 @@ function CreateRegions()
     gg_rct_bfEnemy2 = Rect(896.0, 544.0, 1152.0, 736.0)
     gg_rct_bfEnemy3 = Rect(512.0, 544.0, 768.0, 736.0)
     gg_rct_battlecenter = Rect(1024.0, 96.0, 1056.0, 128.0)
+end
+
+function Trig____________________001_Actions()
+    IssueTargetOrderBJ(nil, "thunderbolt", nil)
+end
+
+function InitTrig____________________001()
+    gg_trg____________________001 = CreateTrigger()
+    TriggerAddAction(gg_trg____________________001, Trig____________________001_Actions)
+end
+
+function InitCustomTriggers()
+    InitTrig____________________001()
 end
 
 function InitCustomPlayerSlots()
@@ -55,6 +69,7 @@ function main()
     CreateRegions()
     InitBlizzard()
     InitGlobals()
+    InitCustomTriggers()
 end
 
 function config()
