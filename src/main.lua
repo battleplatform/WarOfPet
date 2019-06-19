@@ -1,6 +1,4 @@
 
-require('lib')
-
 local function main()
 
     print("Welcome to WarOfPet!!!")
@@ -10,13 +8,15 @@ local function main()
 
     require('eventids')
 
-    dofile('wage.lua')
-    dofile('seller.lua')
-    dofile('fight.lua')
+    require('wage')
+    require('seller')
+    require('fight')    
 
-
-    Unit:create(Player:get(0), FourCC("Hpal"), -668.0, 150.0, 270.000):pause(true)
-
+    Timer:create():start(0.01, true, function()
+        Native.SetCameraField(CameraField.TargetDistance, 2500.0, 0)
+        Native.SetCameraField(CameraField.AngleOfAttack, -50.0, 0)
+    end)
+    
 end
 
 Timer:after(2, main)

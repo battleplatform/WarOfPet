@@ -88,6 +88,7 @@ local stage = {
     end,
     Round = function(rope, ev)
         -- 回合数 round
+        showWorldText(rope, 1, "第" .. ev.round .. "回合")
     end,
     ---@param ev ReplyAttack
     Attack = function(rope, ev)
@@ -116,13 +117,15 @@ local stage = {
         rope:wait(1)
     end,
     Death = function(rope, ev)
+        -- 死亡 source
+        local mdl = 'Abilities\\Spells\\Other\\Volcano\\VolcanoDeath.mdl'
         local u = units[ev.source]
-
         u:kill()
+        Effect:addSpecialTarget(mdl, u, "overhead"):destroy()
+        rope:wait(1)
+        u:remove()
     end,
     End = function(rope, ev)
-
-        print('End')
         local isWin = ev.winner == 1
         if isWin then
             showWorldText(rope, 3, "YOU WIN!")
