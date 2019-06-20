@@ -10,10 +10,9 @@ local unitPosition = {
     Rect:fromUd(gg_rct_bfFriend1),
     Rect:fromUd(gg_rct_bfFriend2),
     Rect:fromUd(gg_rct_bfFriend3),
-
     Rect:fromUd(gg_rct_bfEnemy1),
     Rect:fromUd(gg_rct_bfEnemy2),
-    Rect:fromUd(gg_rct_bfEnemy3),
+    Rect:fromUd(gg_rct_bfEnemy3)
 }
 
 local FightController = Observer:new()
@@ -39,6 +38,7 @@ local function showWorldText(rope, duration, text, r, g, b)
     worldTextTag:setColor(0, 255, 0, 1)
     worldTextTag:setVisibility(true)
     worldTextTag:setText(text, 15 * 0.0023)
+    worldTextTag:setPos(BattleCenter:getCenterX() - #tostring(text) / 2.0 * 25, BattleCenter:getCenterY(), 0)
     rope:wait(duration)
     worldTextTag:setVisibility(false)
 end
@@ -75,14 +75,19 @@ local stage = {
             return
         end
         local isMy = ev.team == 1
-        local u = Unit:create(Player:get(isMy and 0 or 1), ev.petId, pos:getCenterX(), pos:getCenterY(), isMy and 90 or 270)
-        u:addAbility(FourCC('Aro1'))
+        print(isMy)
+        local u =
+            Unit:create(Player:get(isMy and 0 or 1), ev.petId, pos:getCenterX(), pos:getCenterY(), isMy and 90 or 270)
+        -- u:addAbility(FourCC('Aro1'))
         -- u:addAbility(FourCC('Avul'))
         local data = Common.getUnitData(ev.petId)
+        u.hp = data.health
+        u.abil = FourCC(Common.UnitSpell[data.attack])
         u:setMaxHP(data.health)
         u:setState(UnitState.Life, data.health)
-        u:addAbility(FourCC(Common.UnitSpell[data.attack]))
-        u.hp = data.health
+        u:addAbility(u.abil)
+        u:disableAbility(u.abil, true, false)
+        u:pause(true)
         units[ev.entityId] = u
         -- rope:wait(2)
     end,
@@ -94,17 +99,16 @@ local stage = {
     Attack = function(rope, ev)
         -- 攻击事件 source target
 
-        print('Attack')
+        local u = units[ev.source]
+        local t = units[ev.target]
 
-        local source = units[ev.source]
-        local target = units[ev.target]
+        u:pause(false)
+        u:disableAbility(u.abil, false, false)
+        u:issueTargetOrder("chainlightning", t)
+        rope:wait(0.5)
 
-        -- source:pauseEx(false)
-        print( source:issueTargetOrder('thunderbolt', target) )
-
-        rope:wait(1)
-
-        -- source:pauseEx(true)
+        u:pause(true)
+        u:disableAbility(u.abil, true, false)
     end,
     ---@param ev ReplyDamage
     Damage = function(rope, ev)
@@ -118,12 +122,9 @@ local stage = {
     end,
     Death = function(rope, ev)
         -- 死亡 source
-        local mdl = 'Abilities\\Spells\\Other\\Volcano\\VolcanoDeath.mdl'
         local u = units[ev.source]
         u:kill()
-        Effect:addSpecialTarget(mdl, u, "overhead"):destroy()
-        rope:wait(1)
-        u:remove()
+        rope:wait(0.5)
     end,
     End = function(rope, ev)
         local isWin = ev.winner == 1

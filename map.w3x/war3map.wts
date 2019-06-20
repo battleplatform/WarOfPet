@@ -37,7 +37,7 @@ STRING 7
 }
 
 STRING 9
-// 单位: hgz1 (管理员), Name (名字)
+// 单位: Hgz1 (管理员), Name (名字)
 {
 管理员
 }
@@ -67,75 +67,33 @@ STRING 13
 }
 
 STRING 14
-// 技能: Agj2 (攻击2级), Tip (提示工具 - 普通)
+// 技能: Agj1 (攻击1级), Researchtip (提示工具 - 学习)
 {
 攻击
 }
 
 STRING 15
-// 技能: Agj3 (攻击3级), Tip (提示工具 - 普通)
+// 技能: Agj2 (攻击1级), Researchtip (提示工具 - 学习)
 {
 攻击
-}
-
-STRING 19
-// 技能: Agj2 (攻击2级), Name (名字)
-{
-攻击2级
-}
-
-STRING 20
-// 技能: Agj2 (攻击2级), Ubertip (提示工具 - 普通 - 扩展的)
-{
-对目标造成40点伤害
-}
-
-STRING 21
-// 技能: Agj3 (攻击3级), Name (名字)
-{
-攻击3级
 }
 
 STRING 22
-// 技能: Agj4 (攻击4级), Tip (提示工具 - 普通)
+// 技能: Agj3 (攻击1级), Researchtip (提示工具 - 学习)
 {
 攻击
-}
-
-STRING 23
-// 技能: Agj3 (攻击3级), Ubertip (提示工具 - 普通 - 扩展的)
-{
-对目标造成60点伤害
-}
-
-STRING 24
-// 技能: Agj4 (攻击4级), Name (名字)
-{
-攻击4级
 }
 
 STRING 25
-// 技能: Agj5 (攻击5级), Tip (提示工具 - 普通)
+// 技能: Agj4 (攻击1级), Researchtip (提示工具 - 学习)
 {
 攻击
-}
-
-STRING 26
-// 技能: Agj4 (攻击4级), Ubertip (提示工具 - 普通 - 扩展的)
-{
-对目标造成80点伤害
 }
 
 STRING 27
 // 技能: Agj5 (攻击5级), Name (名字)
 {
 攻击5级
-}
-
-STRING 29
-// 技能: Agj5 (攻击5级), Ubertip (提示工具 - 普通 - 扩展的)
-{
-对目标造成100点伤害
 }
 
 STRING 30
@@ -160,5 +118,65 @@ STRING 33
 // 技能: Amat (开始战斗), Ubertip (提示工具 - 普通 - 扩展的)
 {
 随机匹配其他玩家进行对战
+}
+
+STRING 34
+// 技能: Agj1 (攻击1级), Name (名字)
+{
+攻击1级
+}
+
+STRING 36
+// 技能: Agj5 (攻击5级), Researchtip (提示工具 - 学习)
+{
+攻击
+}
+
+STRING 39
+// 技能: Agj1 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+{
+对目标造成|cff00ff002|r|cff0000000|r点伤害
+}
+
+STRING 42
+// 技能: Agj2 (攻击1级), Name (名字)
+{
+攻击1级
+}
+
+STRING 43
+// 技能: Agj2 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+{
+对目标造成|cff00ff004|r|cff0000000|r点伤害
+}
+
+STRING 44
+// 技能: Agj3 (攻击1级), Name (名字)
+{
+攻击1级
+}
+
+STRING 45
+// 技能: Agj3 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+{
+对目标造成|cff00ff006|r|cff0000000|r点伤害
+}
+
+STRING 46
+// 技能: Agj4 (攻击1级), Name (名字)
+{
+攻击1级
+}
+
+STRING 47
+// 技能: Agj4 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+{
+对目标造成|cff00ff008|r|cff0000000|r点伤害
+}
+
+STRING 48
+// 技能: Agj5 (攻击5级), Ubertip (提示工具 - 普通 - 扩展的)
+{
+对目标造成|cff00ff001|r|cff0080000|r|cff0000000|r点伤害
 }
 

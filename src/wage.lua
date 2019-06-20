@@ -39,7 +39,7 @@ local function refreshWage()
 end
 
 local function main()
-    wager = Unit:create(Player:get(0), FourCC("hgz1"), -132.0, 158.0, 270.000)
+    wager = Unit:create(Player:get(0), FourCC("Hgz1"), -132.0, 158.0, 270.000)
     Player:get(0):setState(PlayerState.ResourceFoodCap, 200)
 
     -- 领取工资
