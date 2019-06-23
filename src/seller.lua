@@ -36,8 +36,16 @@ local function getPosition(rt, col, count)
     return minX, minY, padX, padY
 end
 
-function SellerController.updatePet()
-    local ok, res = Common.Request("pets")
+local function getPets(data)
+    if data then
+        return true, {pets = data}
+    end
+    return Common.Request("pets")
+end
+
+function SellerController.updatePet(data)
+    local ok, res = getPets(data)
+
     if ok then
         for i, v in ipairs(res.pets) do
             if npcs[v] then
@@ -45,6 +53,7 @@ function SellerController.updatePet()
                 local tag = npcTags[npcs[v]]
                 tag:setText("已拥有", 9 * 0.0023)
                 tag:setColor(0, 255, 0, 100)
+                tag:setVisibility(true)
                 ---@type Unit
                 local u = pets[v]
                 if not u then
@@ -119,7 +128,7 @@ end
 
 function SellerController.updateSellArea()
     local trig = Trigger:create()
-    trig:addAction(SellerController.buy)
+    -- trig:addAction(SellerController.buy)
 
     local col = 5
     local minX, minY, padX, padY = getPosition(sellArea, col, #Common.UnitData)
@@ -135,7 +144,7 @@ function SellerController.updateSellArea()
         u:setUserData(uid)
         u:setMaxHP(v.health)
         u:setState(UnitState.Life, v.health)
-        u:setName(u:getName() .. string.format("（售价：%s金）", v.price))
+        -- u:setName(u:getName() .. string.format("（售价：%s金）", v.price))
         trig:registerUnitEvent(u, UnitEvent.Selected)
         npcs[uid] = u
 
@@ -143,7 +152,7 @@ function SellerController.updateSellArea()
         tag:setPermanent(true)
         tag:setText("未拥有", 9 * 0.0023)
         tag:setPos(x - 50, y - 50, 0)
-        tag:setVisibility(true)
+        tag:setVisibility(false)
         npcTags[u] = tag
 
         if i % col == 0 then
@@ -176,6 +185,32 @@ function SellerController.buy()
     if ok then
         selectedSellUnit = nil
         SellerController.updatePet()
+        SellerController:fireEvent(Events.GOLD_UPDATE)
+    else
+        print(res)
+    end
+end
+
+function SellerController.lottery()
+    local ok, res = Common.Request("pet_lottery")
+    if ok then
+        local u = npcs[res.petId]
+        if u then
+            local msg = Dialog:create()
+            msg:addButton("确定", 0)
+            msg:setMessage(string.format("恭喜获得宠物 %s", u:getName()))
+            Player:get(0):dialogDisplay(msg, true)
+            local trig = Trigger:create()
+            trig:addAction(
+                function()
+                    trig:destroy()
+                    Player:get(0):dialogDisplay(msg, false)
+                    msg:destroy()
+                end
+            )
+            trig:registerDialogEvent(msg)
+        end
+        SellerController.updatePet(res.pets)
         SellerController:fireEvent(Events.GOLD_UPDATE)
     else
         print(res)
@@ -224,6 +259,8 @@ local function main()
     SellerController.updateSellArea()
     SellerController.updateTeam()
     SellerController.updatePet()
+
+    SellerController:registerEvent(Events.LOTTERY, SellerController.lottery)
 end
 
 Timer:after(0.1, main)

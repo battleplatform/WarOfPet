@@ -43,27 +43,21 @@ STRING 9
 }
 
 STRING 10
-// 技能: Agz1 (老板), Tip (提示工具 - 普通)
+// 技能: Agz1 (领工资), Tip (提示工具 - 普通)
 {
 领工资(|cffffcc00G|r)
 }
 
 STRING 11
-// 技能: Agz1 (老板), Hotkey (热键 - 普通)
+// 技能: Agz1 (领工资), Hotkey (热键 - 普通)
 {
 G
 }
 
 STRING 12
-// 技能: Agz1 (老板), Ubertip (提示工具 - 普通 - 扩展的)
+// 技能: Agz1 (领工资), Ubertip (提示工具 - 普通 - 扩展的)
 {
 每分钟增加|cffff00001|r金币（包含离线），上限|cffff0000500|r金币
-}
-
-STRING 13
-// 技能: Agz1 (老板), Name (名字)
-{
-老板
 }
 
 STRING 14
@@ -132,51 +126,135 @@ STRING 36
 攻击
 }
 
-STRING 39
-// 技能: Agj1 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+STRING 42
+// 技能: Agj1 (攻击1级), Tip (提示工具 - 普通)
 {
-对目标造成|cff00ff002|r|cff0000000|r点伤害
+攻击1级
 }
 
-STRING 42
+STRING 44
 // 技能: Agj2 (攻击1级), Name (名字)
 {
 攻击1级
 }
 
-STRING 43
-// 技能: Agj2 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
-{
-对目标造成|cff00ff004|r|cff0000000|r点伤害
-}
-
-STRING 44
+STRING 46
 // 技能: Agj3 (攻击1级), Name (名字)
 {
 攻击1级
 }
 
-STRING 45
-// 技能: Agj3 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+STRING 49
+// 技能: Agz1 (领工资), Name (名字)
 {
-对目标造成|cff00ff006|r|cff0000000|r点伤害
+领工资
 }
 
-STRING 46
+STRING 50
+// 技能: Acj1 (抽宠物), Name (名字)
+{
+抽宠物
+}
+
+STRING 51
+// 技能: Acj1 (抽宠物), Tip (提示工具 - 普通)
+{
+抽奖(|cffffcc00L|r)
+}
+
+STRING 52
+// 技能: Acj1 (抽宠物), Hotkey (热键 - 普通)
+{
+L
+}
+
+STRING 53
+// 技能: Acj1 (抽宠物), Ubertip (提示工具 - 普通 - 扩展的)
+{
+随机抽取一只宠物
+}
+
+STRING 54
+// 技能: Agj1 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+{
+对目标造成|cff00ff0020|r点伤害
+}
+
+STRING 55
+// 技能: Agj2 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+{
+对目标造成|cff00ff0040|r点伤害
+}
+
+STRING 56
+// 技能: Agj3 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+{
+对目标造成|cff00ff0060|r点伤害
+}
+
+STRING 57
+// 技能: Agj4 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+{
+对目标造成|cff00ff0080|r点伤害
+}
+
+STRING 58
+// 技能: Agj5 (攻击5级), Ubertip (提示工具 - 普通 - 扩展的)
+{
+对目标造成|cff00ff00100|r点伤害
+}
+
+STRING 59
+// 技能: Agj2 (攻击1级), Tip (提示工具 - 普通)
+{
+攻击2级
+}
+
+STRING 60
+// 技能: Agj3 (攻击1级), Tip (提示工具 - 普通)
+{
+攻击3级
+}
+
+STRING 61
 // 技能: Agj4 (攻击1级), Name (名字)
 {
 攻击1级
 }
 
-STRING 47
-// 技能: Agj4 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+STRING 62
+// 技能: Agj4 (攻击1级), Tip (提示工具 - 普通)
 {
-对目标造成|cff00ff008|r|cff0000000|r点伤害
+攻击4级
 }
 
-STRING 48
-// 技能: Agj5 (攻击5级), Ubertip (提示工具 - 普通 - 扩展的)
+STRING 63
+// 技能: Agj5 (攻击5级), Tip (提示工具 - 普通)
 {
-对目标造成|cff00ff001|r|cff0080000|r|cff0000000|r点伤害
+攻击5级
+}
+
+STRING 64
+// 技能: Askp (跳过战斗), Name (名字)
+{
+跳过战斗
+}
+
+STRING 65
+// 技能: Askp (跳过战斗), Tip (提示工具 - 普通)
+{
+跳过战斗(|cffffcc00S|r)
+}
+
+STRING 66
+// 技能: Askp (跳过战斗), Hotkey (热键 - 普通)
+{
+S
+}
+
+STRING 67
+// 技能: Askp (跳过战斗), Ubertip (提示工具 - 普通 - 扩展的)
+{
+跳过对战过程
 }
 

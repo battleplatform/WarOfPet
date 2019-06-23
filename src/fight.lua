@@ -25,6 +25,7 @@ local StartCountDown = TextTag:create()
 ---@type Timer
 local worldUpdate
 local worldUpdateInterval = 0.03
+local skipRound = false
 
 ---@type TextTag
 local worldTextTag = TextTag:create()
@@ -100,8 +101,11 @@ local stage = {
         -- 攻击事件 source target
 
         local u = units[ev.source]
+        local pos = unitPosition[ev.source]
         local t = units[ev.target]
+        local isMy = ev.source <= 3
 
+        u:setPosition(BattleCenter:getCenterX(), BattleCenter:getCenterY() + (isMy and -200 or 200))
         u:pause(false)
         u:disableAbility(u.abil, false, false)
         u:issueTargetOrder("chainlightning", t)
@@ -109,6 +113,7 @@ local stage = {
 
         u:pause(true)
         u:disableAbility(u.abil, true, false)
+        u:setPosition(pos:getCenterX(), pos:getCenterY())
     end,
     ---@param ev ReplyDamage
     Damage = function(rope, ev)
@@ -142,10 +147,13 @@ local stage = {
 
 local function startFight(rope)
     for i, v in ipairs(fightData) do
-        if stage[v.type] then
-            stage[v.type](rope, v)
+        if not skipRound or v.type == "End" then
+            if stage[v.type] then
+                stage[v.type](rope, v)
+            end
         end
     end
+    skipRound = false
 end
 
 local function startMatch()
@@ -180,6 +188,12 @@ end
 
 local function main()
     FightController:registerEvent(Events.START_MATCH, startMatch)
+    FightController:registerEvent(
+        Events.SKIP_ROUND,
+        function()
+            skipRound = true
+        end
+    )
 end
 
 Timer:after(0.1, main)

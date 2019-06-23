@@ -26,6 +26,10 @@ local function getWage()
         end
     elseif spell == FourCC("Amat") then
         WageController:fireEvent(Events.START_MATCH)
+    elseif spell == FourCC("Acj1") then
+        WageController:fireEvent(Events.LOTTERY)
+    elseif spell == FourCC("Askp") then
+        WageController:fireEvent(Events.SKIP_ROUND)
     end
 end
 
