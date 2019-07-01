@@ -1,10 +1,10 @@
-require('lib.native')
-require('lib.base')
-require('lib.oop')
+Native = require('lib.stdlib.native')
+require('lib.stdlib.base')
+require('lib.stdlib.oop')
 
 --@debug@
 require("lib.console")
 --@end-debug@
 
-require("lib.oop.enum")
+require("lib.stdlib.enum")
 require('lib.observer')
