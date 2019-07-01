@@ -11,10 +11,10 @@ local function main()
     require("wage")
     require("seller")
     require("fight")
+    require('common').initMLS()
 
     Timer:create():start(
         0.01,
-        true,
         function()
             Native.SetCameraField(CameraField.TargetDistance, 2500.0, 0)
             Native.SetCameraField(CameraField.AngleOfAttack, -50.0, 0)

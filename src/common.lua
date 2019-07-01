@@ -1,25 +1,59 @@
 local json = require("json")
+local Event = require('lib.stdlib.oop.event')
+local co = require("co")
 
-local Common = {
-    host = "http://192.168.112.85:9527"
-}
+local Common = {host = "http://192.168.112.85:9527", mls = true}
+Common.bundle = co()
 
 function Common.Request(route, data)
-    local res =
-        Native.RequestExtraStringData(
-        53,
-        nil,
-        string.format("%s/%s?%s", Common.host, route, data or ""),
-        "",
-        false,
-        0,
-        0,
-        0
-    )
+    local res = Native.RequestExtraStringData(53, nil, string.format("%s/%s?%s", Common.host, route, data or ""), "",
+                                              false, 0, 0, 0)
     -- print(res, data)
     local ok, res = pcall(json.decode, res)
     ok = ok and not res.error
     return ok, ok and res.body or res.message or res
+end
+
+local mlsCallId = {}
+local callId = 0
+local mlsTimeout = 10000
+local function onMLS()
+    local ok, res = pcall(json.decode, Event:getTriggerSyncData())
+    if not ok or not res or not res.callId then
+        print('invalid mls message, ', Event:getTriggerSyncData(), res)
+        return
+    end
+
+    local t = mlsCallId[res.callId]
+    t.result = res
+    t.ok = ok and not res.error
+    t.rope:signal(res.callId)
+end
+
+function Common.initMLS()
+    if not Common.mls then
+        return
+    end
+
+    local t = Trigger:create()
+    t:registerPlayerSyncEvent(Player:get(0), 'MLSP', true)
+    t:addAction(onMLS)
+
+    local t = Timer:create()
+    t:start(0.03, function()
+        Common.bundle:update(t:getElapsed())
+    end)
+end
+
+function Common.RequestAsync(rope, route, data)
+    local id = callId
+    local t = {route = route, data = data, callId = id}
+    mlsCallId[id] = t
+    callId = callId + 1
+    Native.RequestExtraBooleanData(53, Player:get(0):getUd(), json.encode(t), '', false, 0, 0, 0)
+    mlsCallId[id].rope = rope
+    rope:listen(id)
+    return t.ok, t.ok and t.result.body or t.result.message or t.result
 end
 
 ---@class UnitData
@@ -53,16 +87,10 @@ Common.UnitData = {
     {petId = "hcth", price = 250, attack = 100, health = 500, speed = 25},
     {petId = "hhes", price = 250, attack = 100, health = 500, speed = 25},
     {petId = "ogrk", price = 250, attack = 100, health = 500, speed = 25},
-    {petId = "nw2w", price = 250, attack = 100, health = 500, speed = 25}
+    {petId = "nw2w", price = 250, attack = 100, health = 500, speed = 25},
 }
 
-Common.UnitSpell = {
-    [20] = "Agj1",
-    [40] = "Agj2",
-    [60] = "Agj3",
-    [80] = "Agj4",
-    [100] = "Agj5"
-}
+Common.UnitSpell = {[20] = "Agj1", [40] = "Agj2", [60] = "Agj3", [80] = "Agj4", [100] = "Agj5"}
 
 ---@return UnitData
 function Common.getUnitData(id)

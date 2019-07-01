@@ -7,12 +7,8 @@ local BattleCenter = Rect:fromUd(gg_rct_battlecenter)
 
 ---@type Rect[]
 local unitPosition = {
-    Rect:fromUd(gg_rct_bfFriend1),
-    Rect:fromUd(gg_rct_bfFriend2),
-    Rect:fromUd(gg_rct_bfFriend3),
-    Rect:fromUd(gg_rct_bfEnemy1),
-    Rect:fromUd(gg_rct_bfEnemy2),
-    Rect:fromUd(gg_rct_bfEnemy3)
+    Rect:fromUd(gg_rct_bfFriend1), Rect:fromUd(gg_rct_bfFriend2), Rect:fromUd(gg_rct_bfFriend3),
+    Rect:fromUd(gg_rct_bfEnemy1), Rect:fromUd(gg_rct_bfEnemy2), Rect:fromUd(gg_rct_bfEnemy3),
 }
 
 local FightController = Observer:new()
@@ -76,8 +72,8 @@ local stage = {
             return
         end
         local isMy = ev.team == 1
-        local u =
-            Unit:create(Player:get(isMy and 0 or 1), ev.petId, pos:getCenterX(), pos:getCenterY(), isMy and 90 or 270)
+        local u = Unit:create(Player:get(isMy and 0 or 1), ev.petId, pos:getCenterX(), pos:getCenterY(),
+                              isMy and 90 or 270)
         -- u:addAbility(FourCC('Aro1'))
         -- u:addAbility(FourCC('Avul'))
         local data = Common.getUnitData(ev.petId)
@@ -139,7 +135,7 @@ local stage = {
             v:remove()
         end
         units = {}
-    end
+    end,
 }
 
 local function startFight(rope)
@@ -153,44 +149,47 @@ local function startFight(rope)
     skipRound = false
 end
 
-local function startMatch()
+local function startMatch(_rope)
     if worldUpdate then
         print("正在进行战斗")
         return
     end
-    local ok, res = Common.Request("battle")
+
+    local ok, res
+    if _rope then
+        ok, res = Common.RequestAsync(_rope, "battle")
+    else
+        ok, res = Common.Request("battle")
+    end
+
     if ok then
         fightData = res.battle
 
-        bundle(
-            function(rope)
-                startFight(rope)
-                worldUpdate:destroy()
-                worldUpdate = nil
-            end
-        )
+        bundle(function(rope)
+            startFight(rope)
+            worldUpdate:destroy()
+            worldUpdate = nil
+        end)
 
         worldUpdate = Timer:create()
-        worldUpdate:start(
-            worldUpdateInterval,
-            true,
-            function()
-                bundle:update(worldUpdate:getElapsed())
-            end
-        )
+        worldUpdate:start(worldUpdateInterval, function()
+            bundle:update(worldUpdate:getElapsed())
+        end)
     else
         print(res)
     end
 end
 
 local function main()
+    if Common.mls then
+        FightController:registerEvent(Events.START_MATCH, function()
+            Common.bundle(startMatch)
+        end)
+    end
     FightController:registerEvent(Events.START_MATCH, startMatch)
-    FightController:registerEvent(
-        Events.SKIP_ROUND,
-        function()
-            skipRound = true
-        end
-    )
+    FightController:registerEvent(Events.SKIP_ROUND, function()
+        skipRound = true
+    end)
 end
 
 Timer:after(0.1, main)

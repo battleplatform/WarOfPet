@@ -36,15 +36,18 @@ local function getPosition(rt, col, count)
     return minX, minY, padX, padY
 end
 
-local function getPets(data)
+local function getPets(data, _rope)
     if data then
         return true, {pets = data}
+    end
+    if _rope then
+        return Common.RequestAsync(_rope, "pets")
     end
     return Common.Request("pets")
 end
 
-function SellerController.updatePet(data)
-    local ok, res = getPets(data)
+function SellerController.updatePet(data, _rope)
+    local ok, res = getPets(data, _rope)
 
     if ok then
         for i, v in ipairs(res.pets) do
@@ -111,8 +114,13 @@ function SellerController.updatePet(data)
     end
 end
 
-function SellerController.updateTeam()
-    local ok, res = Common.Request("team")
+function SellerController.updateTeam(_rope)
+    local ok, res
+    if _rope then
+        ok, res = Common.RequestAsync(_rope, "team")
+    else
+        ok, res = Common.Request("team")
+    end
     if ok then
         teams = {}
         for i, v in ipairs(res.team) do
@@ -191,8 +199,13 @@ function SellerController.buy()
     end
 end
 
-function SellerController.lottery()
-    local ok, res = Common.Request("pet_lottery")
+function SellerController.lottery(_rope)
+    local ok, res
+    if _rope then
+        ok, res = Common.RequestAsync(_rope, "pet_lottery")
+    else
+        ok, res = Common.Request("pet_lottery")
+    end
     if ok then
         local u = npcs[res.petId]
         if u then
@@ -201,13 +214,11 @@ function SellerController.lottery()
             msg:setMessage(string.format("恭喜获得宠物 %s", u:getName()))
             Player:get(0):dialogDisplay(msg, true)
             local trig = Trigger:create()
-            trig:addAction(
-                function()
-                    trig:destroy()
-                    Player:get(0):dialogDisplay(msg, false)
-                    msg:destroy()
-                end
-            )
+            trig:addAction(function()
+                trig:destroy()
+                Player:get(0):dialogDisplay(msg, false)
+                msg:destroy()
+            end)
             trig:registerDialogEvent(msg)
         end
         SellerController.updatePet(res.pets)
@@ -217,7 +228,7 @@ function SellerController.lottery()
     end
 end
 
-function SellerController.petClick()
+function SellerController.petClick(_rope)
     selectedSellUnit = nil
     local u = Unit:fromUd(Native.GetTriggerUnit())
     local uid = u:getUserData()
@@ -242,25 +253,48 @@ function SellerController.petClick()
         teams[uid] = #teams
     end
 
-    local ok, res = Common.Request("set_team", string.format("team=%s", table.concat(teams, ",")))
+    local ok, res
+    if _rope then
+        ok, res = Common.RequestAsync(_rope, "set_team", string.format("team=%s", table.concat(teams, ",")))
+    else
+        ok, res = Common.Request("set_team", string.format("team=%s", table.concat(teams, ",")))
+    end
+
     if ok then
         selectedPetUnit = nil
-        SellerController.updateTeam()
-        SellerController.updatePet()
+        SellerController.updateTeam(_rope)
+        SellerController.updatePet(_rope)
     else
         print(err)
     end
 end
 
-local function main()
+local function main(_rope)
     petTrigger = Trigger:create()
-    petTrigger:addAction(SellerController.petClick)
+    if Common.mls then
+        petTrigger:addAction(function()
+            Common.bundle(SellerController.petClick)
+        end)
+        SellerController:registerEvent(Events.LOTTERY, function()
+            Common.bundle(SellerController.lottery)
+        end)
+    else
+        petTrigger:addAction(SellerController.petClick)
+        SellerController.updateTeam()
+        SellerController.updatePet()
+        SellerController:registerEvent(Events.LOTTERY, SellerController.lottery)
+    end
 
     SellerController.updateSellArea()
-    SellerController.updateTeam()
-    SellerController.updatePet()
+    SellerController.updateTeam(_rope)
+    SellerController.updatePet(nil, _rope)
 
-    SellerController:registerEvent(Events.LOTTERY, SellerController.lottery)
 end
 
-Timer:after(0.1, main)
+Timer:after(0.1, function()
+    if Common.mls then
+        Common.bundle(main)
+    else
+        main()
+    end
+end)
