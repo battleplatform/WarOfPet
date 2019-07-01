@@ -38,7 +38,7 @@ end
 
 function InitCustomTeams()
     SetPlayerTeam(Player(0), 0)
-    SetPlayerTeam(Player(1), 0)
+    SetPlayerTeam(Player(1), 1)
 end
 
 function InitAllyPriorities()

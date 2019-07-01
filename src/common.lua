@@ -1,7 +1,7 @@
 local json = require("json")
 
 local Common = {
-    host = "http://192.168.101.55:9527"
+    host = "http://192.168.112.85:9527"
 }
 
 function Common.Request(route, data)
@@ -16,7 +16,7 @@ function Common.Request(route, data)
         0,
         0
     )
-    print(res, data)
+    -- print(res, data)
     local ok, res = pcall(json.decode, res)
     ok = ok and not res.error
     return ok, ok and res.body or res.message or res

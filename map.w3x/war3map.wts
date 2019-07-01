@@ -67,19 +67,19 @@ STRING 14
 }
 
 STRING 15
-// 技能: Agj2 (攻击1级), Researchtip (提示工具 - 学习)
+// 技能: Agj2 (攻击2级), Researchtip (提示工具 - 学习)
 {
 攻击
 }
 
 STRING 22
-// 技能: Agj3 (攻击1级), Researchtip (提示工具 - 学习)
+// 技能: Agj3 (攻击3级), Researchtip (提示工具 - 学习)
 {
 攻击
 }
 
 STRING 25
-// 技能: Agj4 (攻击1级), Researchtip (提示工具 - 学习)
+// 技能: Agj4 (攻击4级), Researchtip (提示工具 - 学习)
 {
 攻击
 }
@@ -132,18 +132,6 @@ STRING 42
 攻击1级
 }
 
-STRING 44
-// 技能: Agj2 (攻击1级), Name (名字)
-{
-攻击1级
-}
-
-STRING 46
-// 技能: Agj3 (攻击1级), Name (名字)
-{
-攻击1级
-}
-
 STRING 49
 // 技能: Agz1 (领工资), Name (名字)
 {
@@ -181,19 +169,19 @@ STRING 54
 }
 
 STRING 55
-// 技能: Agj2 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+// 技能: Agj2 (攻击2级), Ubertip (提示工具 - 普通 - 扩展的)
 {
 对目标造成|cff00ff0040|r点伤害
 }
 
 STRING 56
-// 技能: Agj3 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+// 技能: Agj3 (攻击3级), Ubertip (提示工具 - 普通 - 扩展的)
 {
 对目标造成|cff00ff0060|r点伤害
 }
 
 STRING 57
-// 技能: Agj4 (攻击1级), Ubertip (提示工具 - 普通 - 扩展的)
+// 技能: Agj4 (攻击4级), Ubertip (提示工具 - 普通 - 扩展的)
 {
 对目标造成|cff00ff0080|r点伤害
 }
@@ -205,25 +193,19 @@ STRING 58
 }
 
 STRING 59
-// 技能: Agj2 (攻击1级), Tip (提示工具 - 普通)
+// 技能: Agj2 (攻击2级), Name (名字)
 {
 攻击2级
 }
 
 STRING 60
-// 技能: Agj3 (攻击1级), Tip (提示工具 - 普通)
+// 技能: Agj3 (攻击3级), Name (名字)
 {
 攻击3级
 }
 
-STRING 61
-// 技能: Agj4 (攻击1级), Name (名字)
-{
-攻击1级
-}
-
 STRING 62
-// 技能: Agj4 (攻击1级), Tip (提示工具 - 普通)
+// 技能: Agj4 (攻击4级), Name (名字)
 {
 攻击4级
 }
@@ -256,5 +238,33 @@ STRING 67
 // 技能: Askp (跳过战斗), Ubertip (提示工具 - 普通 - 扩展的)
 {
 跳过对战过程
+}
+
+STRING 68
+// 技能: Agj2 (攻击2级), Tip (提示工具 - 普通)
+{
+攻击2级
+}
+
+STRING 69
+// 技能: Agj3 (攻击3级), Tip (提示工具 - 普通)
+{
+攻击3级
+}
+
+STRING 70
+// 技能: Agj4 (攻击4级), Tip (提示工具 - 普通)
+{
+攻击4级
+}
+
+STRING 71
+{
+收藏家
+}
+
+STRING 72
+{
+NPC
 }
 

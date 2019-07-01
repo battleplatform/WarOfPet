@@ -61,7 +61,7 @@ local stage = {
         Native.PanCameraToTimed(BattleCenter:getCenterX(), BattleCenter:getCenterY(), 1.0)
         rope:wait(1)
         showWorldText(rope, 1, "准备战斗")
-        print(ev.type)
+        -- print(ev.type)
         for i = 2, 1, -1 do
             showWorldText(rope, 1, i)
         end
@@ -76,7 +76,6 @@ local stage = {
             return
         end
         local isMy = ev.team == 1
-        print(isMy)
         local u =
             Unit:create(Player:get(isMy and 0 or 1), ev.petId, pos:getCenterX(), pos:getCenterY(), isMy and 90 or 270)
         -- u:addAbility(FourCC('Aro1'))
@@ -87,8 +86,8 @@ local stage = {
         u:setMaxHP(data.health)
         u:setState(UnitState.Life, data.health)
         u:addAbility(u.abil)
-        u:disableAbility(u.abil, true, false)
-        u:pause(true)
+        u:pauseEx(true)
+        -- u:disableAbility(u.abil, true, false)
         units[ev.entityId] = u
         -- rope:wait(2)
     end,
@@ -106,13 +105,11 @@ local stage = {
         local isMy = ev.source <= 3
 
         u:setPosition(BattleCenter:getCenterX(), BattleCenter:getCenterY() + (isMy and -200 or 200))
-        u:pause(false)
-        u:disableAbility(u.abil, false, false)
+        u:pauseEx(false)
         u:issueTargetOrder("chainlightning", t)
-        rope:wait(0.5)
+        rope:wait(1.0)
 
-        u:pause(true)
-        u:disableAbility(u.abil, true, false)
+        u:pauseEx(true)
         u:setPosition(pos:getCenterX(), pos:getCenterY())
     end,
     ---@param ev ReplyDamage
