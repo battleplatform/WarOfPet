@@ -16,7 +16,7 @@ end
 
 local mlsCallId = {}
 local callId = 0
-local mlsTimeout = 10000
+local mlsTimeout = 5
 local function onMLS()
     local ok, res = pcall(json.decode, Event:getTriggerSyncData())
     if not ok or not res or not res.callId then
@@ -40,8 +40,17 @@ function Common.initMLS()
     t:addAction(onMLS)
 
     local t = Timer:create()
+    Common.ts = 0
     t:start(0.03, function()
+        Common.ts = Common.ts + t:getElapsed()
         Common.bundle:update(t:getElapsed())
+        for k, v in pairs(mlsCallId) do
+            if Common.ts - v.ts > mlsTimeout then
+                v.ok = false
+                v.result = 'timeout'
+                Common.bundle:resume(v.rope)
+            end
+        end
     end)
 end
 
@@ -52,7 +61,10 @@ function Common.RequestAsync(rope, route, data)
     callId = callId + 1
     Native.RequestExtraBooleanData(53, Player:get(0):getUd(), json.encode(t), '', false, 0, 0, 0)
     mlsCallId[id].rope = rope
+    mlsCallId[id].ts = Common.ts
     rope:listen(id)
+    t = mlsCallId[id]
+    mlsCallId[id] = nil
     return t.ok, t.ok and t.result.body or t.result.message or t.result
 end
 
