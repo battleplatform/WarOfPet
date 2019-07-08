@@ -7,4 +7,4 @@ require("lib.console")
 --@end-debug@
 
 require("lib.stdlib.enum")
-require('lib.observer')
+Observer = require('lib.stdlib.utils.observer')

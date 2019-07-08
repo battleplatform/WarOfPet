@@ -1,6 +1,7 @@
 local Common = require("common")
 local co = require("co")
 local bundle = co()
+local Order = require('lib.stdlib.enum.order')
 
 ---@type Rect
 local BattleCenter = Rect:fromUd(gg_rct_battlecenter)
@@ -34,7 +35,7 @@ local function showWorldText(rope, duration, text, r, g, b)
     b = b or 0
     worldTextTag:setColor(0, 255, 0, 1)
     worldTextTag:setVisibility(true)
-    worldTextTag:setText(text, 15 * 0.0023)
+    worldTextTag:setText(tostring(text), 15 * 0.0023)
     worldTextTag:setPos(BattleCenter:getCenterX() - #tostring(text) / 2.0 * 25, BattleCenter:getCenterY(), 0)
     rope:wait(duration)
     worldTextTag:setVisibility(false)
@@ -102,7 +103,7 @@ local stage = {
 
         u:setPosition(BattleCenter:getCenterX(), BattleCenter:getCenterY() + (isMy and -200 or 200))
         u:pauseEx(false)
-        u:issueTargetOrder("chainlightning", t)
+        u:issueTargetOrder(Order.chainlightning, t)
         rope:wait(1.0)
 
         u:pauseEx(true)
@@ -132,7 +133,7 @@ local stage = {
             showWorldText(rope, 3, "YOU LOSE!", 255, 0, 0)
         end
         for k, v in pairs(units) do
-            v:remove()
+            v:delete()
         end
         units = {}
     end,
@@ -167,7 +168,7 @@ local function startMatch(_rope)
 
         bundle(function(rope)
             startFight(rope)
-            worldUpdate:destroy()
+            worldUpdate:delete()
             worldUpdate = nil
         end)
 
