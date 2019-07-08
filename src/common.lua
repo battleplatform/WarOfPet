@@ -27,7 +27,7 @@ local function onMLS()
     local t = mlsCallId[res.callId]
     t.result = res
     t.ok = ok and not res.error
-    t.rope:signal(res.callId)
+    Common.bundle:resume(t.rope)
 end
 
 function Common.initMLS()
