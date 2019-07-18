@@ -10,8 +10,6 @@
 
 4. git
 
-
-
 ### 本地启动
 
 ---
@@ -19,13 +17,13 @@
 1. 下载地图源码
    
    ```bash
-   git clone https://github.com/warcraft-iii
+   git clone https://github.com/battleplatform/WarOfPet.git
    git submodule update --init --recursive`
    ```
 
 2. 下载服务器端源码
    
-     `git clone https://github.com/warcraft-iii`
+     `git clone https://github.com/battleplatform/battlepet-server.git`
 
 3. 启动服务器端
    
@@ -70,14 +68,8 @@ function GetWebContent takes boolean isPost, string url, string data returns str
 endfunction
 ```
 
-
-
 例如：
 
 ```
 call GetWebContent(false, "http://www.baidu.com", nil)
 ```
-
-
-
-
