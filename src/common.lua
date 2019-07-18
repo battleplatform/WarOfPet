@@ -2,7 +2,7 @@ local json = require("json")
 local Event = require('lib.stdlib.oop.event')
 local co = require("co")
 
-local Common = {host = "http://192.168.112.85:9527", mls = true}
+local Common = {host = "http://[IP]:[PORT]", mls = false}
 Common.bundle = co()
 
 function Common.Request(route, data)

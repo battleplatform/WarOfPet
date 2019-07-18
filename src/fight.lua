@@ -186,8 +186,9 @@ local function main()
         FightController:registerEvent(Events.START_MATCH, function()
             Common.bundle(startMatch)
         end)
+    else
+        FightController:registerEvent(Events.START_MATCH, startMatch)
     end
-    FightController:registerEvent(Events.START_MATCH, startMatch)
     FightController:registerEvent(Events.SKIP_ROUND, function()
         skipRound = true
     end)

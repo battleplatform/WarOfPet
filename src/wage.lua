@@ -19,8 +19,10 @@ local function refreshGold(_rope)
     end
 end
 
-local function getWage(_rope)
-    local spell = Native.GetSpellAbilityId()
+local function getWage(_rope, spell)
+    if not spell then
+        spell = Native.GetSpellAbilityId()
+    end
     if spell == FourCC("Agz1") then
         local ok, res
         if _rope then
@@ -76,7 +78,10 @@ local function main(_rope)
             Common.bundle(refreshGold)
         end)
         w:addAction(function()
-            Common.bundle(getWage)
+            local spell = Native.GetSpellAbilityId()
+            Common.bundle(function(r)
+                getWage(r, spell)
+            end)
         end)
         r:addAction(function()
             Common.bundle(refreshWage)
