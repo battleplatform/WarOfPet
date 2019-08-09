@@ -2,7 +2,7 @@ local json = require("json")
 local Event = require('lib.stdlib.oop.event')
 local co = require("co")
 
-local Common = {host = "http://[IP]:[PORT]", mls = false}
+local Common = {host = "127.0.0.1", port = 9528, mls = true, connected = false}
 Common.bundle = co()
 
 function Common.Request(route, data)
@@ -14,13 +14,19 @@ function Common.Request(route, data)
     return ok, ok and res.body or res.message or res
 end
 
+local function GetNetResponse()
+    return Native.RequestExtraStringData(57, nil, '', '', false, 0, 0, 0)
+end
+
 local mlsCallId = {}
 local callId = 0
 local mlsTimeout = 5
 local function onMLS()
-    local ok, res = pcall(json.decode, Event:getTriggerSyncData())
+    local data = GetNetResponse()
+    local ok, res = pcall(json.decode, data)
+    print(ok, res)
     if not ok or not res or not res.callId then
-        print('invalid mls message, ', Event:getTriggerSyncData(), res)
+        print('invalid mls message, ', data, res)
         return
     end
 
@@ -36,8 +42,21 @@ function Common.initMLS()
     end
 
     local t = Trigger:create()
-    t:registerPlayerSyncEvent(Player:get(0), 'MLSP', true)
+    t:registerPlayerSyncEvent(Player:get(0), 'NET_RECEIVE', true)
     t:addAction(onMLS)
+
+    t = Trigger:create()
+    t:registerPlayerSyncEvent(Player:get(0), 'NET_CONNECT', true)
+    t:addAction(function()
+        Common.connected = true
+    end)
+
+    t = Trigger:create()
+    t:registerPlayerSyncEvent(Player:get(0), 'NET_DISCONNECT', true)
+    t:addAction(function()
+        Common.connected = false
+    end)
+
 
     local t = Timer:create()
     Common.ts = 0
@@ -54,12 +73,16 @@ function Common.initMLS()
     end)
 end
 
+function Common.Connect()
+    return Native.RequestExtraBooleanData(54, nil, Common.host, '', false, Common.port, 0, 0)
+end
+
 function Common.RequestAsync(rope, route, data)
     local id = callId
     local t = {route = route, data = data, callId = id}
     mlsCallId[id] = t
     callId = callId + 1
-    Native.RequestExtraBooleanData(53, Player:get(0):getUd(), json.encode(t), '', false, 0, 0, 0)
+    Native.RequestExtraBooleanData(56, nil, json.encode(t), '', false, 0, 0, 0)
     mlsCallId[id].rope = rope
     mlsCallId[id].ts = Common.ts
     rope:listen(id)

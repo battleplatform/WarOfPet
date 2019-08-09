@@ -228,9 +228,11 @@ function SellerController.lottery(_rope)
     end
 end
 
-function SellerController.petClick(_rope)
+function SellerController.petClick(_rope, u)
     selectedSellUnit = nil
-    local u = Unit:fromUd(Native.GetTriggerUnit())
+    if not _rope then
+        u = Unit:fromUd(Native.GetTriggerUnit())
+    end
     local uid = u:getUserData()
 
     if selectedPetUnit ~= u then
@@ -273,7 +275,10 @@ local function main(_rope)
     petTrigger = Trigger:create()
     if Common.mls then
         petTrigger:addAction(function()
-            Common.bundle(SellerController.petClick)
+            local u = Unit:fromUd(Native.GetTriggerUnit())
+            Common.bundle(function(r)
+                SellerController.petClick(r, u)
+            end)
         end)
         SellerController:registerEvent(Events.LOTTERY, function()
             Common.bundle(SellerController.lottery)
